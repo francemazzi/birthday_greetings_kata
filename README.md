@@ -142,6 +142,25 @@ Il sistema utilizza JWT (JSON Web Tokens) per l'autenticazione. Include:
   docker exec -i <container-name> psql -U postgres mydb < backup.sql
   ```
 
+## TEST to send email
+
+We use mailhog to test the email sending. The steps are:
+
+1. Run the docker compose file
+2. Go to http://localhost:8025/ to see the emails sent
+
+Use this curl:
+
+```bash
+curl -X POST http://localhost:8000/email/send \
+-H "Content-Type: application/json" \
+-d '{
+  "to": "test@example.com",
+  "subject": "Test Email",
+  "content": "This is a test"
+}'
+```
+
 ## 📝 License
 
 MIT License - vedere il file LICENSE per i dettagli
