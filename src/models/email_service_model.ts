@@ -1,4 +1,4 @@
-import { Socket } from "net";
+import { Socket, connect as netConnect } from "net";
 import { TLSSocket, connect as tlsConnect } from "tls";
 
 interface EmailOptions {
@@ -12,26 +12,39 @@ export class EmailService {
   private port: number;
   private username: string;
   private password: string;
+  private useTLS: boolean;
 
   constructor() {
     this.host = process.env.SMTP_HOST || "";
     this.port = Number(process.env.SMTP_PORT) || 465;
     this.username = process.env.SMTP_USER || "";
-    this.password = Buffer.from(
-      this.username + ":" + (process.env.SMTP_PASSWORD || "")
-    ).toString("base64");
+    this.password = process.env.SMTP_PASSWORD || "";
+    this.useTLS = this.port === 465;
   }
 
-  private createConnection(): Promise<TLSSocket> {
+  private async createConnection(): Promise<Socket | TLSSocket> {
     return new Promise((resolve, reject) => {
-      const socket = tlsConnect({
+      console.log(`Tentativo di connessione a ${this.host}:${this.port}`);
+
+      const socket = netConnect({
         host: this.host,
         port: this.port,
-        servername: this.host,
       });
 
-      socket.on("error", reject);
-      socket.on("connect", () => resolve(socket));
+      socket.on("error", (error) => {
+        console.error("Errore di connessione:", error);
+        reject(error);
+      });
+
+      socket.on("connect", () => {
+        console.log("Connessione stabilita 🎉");
+        resolve(socket);
+      });
+
+      setTimeout(() => {
+        socket.destroy();
+        reject(new Error("Timeout della connessione"));
+      }, 5000);
     });
   }
 
@@ -56,7 +69,7 @@ export class EmailService {
   }
 
   async sendEmail({ to, subject, content }: EmailOptions): Promise<boolean> {
-    let socket: TLSSocket | null = null;
+    let socket: Socket | TLSSocket | null = null;
 
     try {
       socket = await this.createConnection();
@@ -103,15 +116,19 @@ export class EmailService {
   }
 
   async verifyConnection(): Promise<boolean> {
-    let socket: TLSSocket | null = null;
+    let socket: Socket | TLSSocket | null = null;
 
     try {
+      console.log("Inizio verifica connessione...");
       socket = await this.createConnection();
+      console.log("Connessione stabilita, invio comando EHLO");
+
       const response = await this.sendCommand(socket, "EHLO " + this.host);
-      console.log("Connessione SMTP verificata con successo");
-      return response.startsWith("250");
+      console.log("Risposta EHLO:", response);
+
+      return true;
     } catch (error) {
-      console.error("Errore nella verifica della connessione SMTP:", error);
+      console.error("Errore dettagliato verifica connessione:", error);
       return false;
     } finally {
       if (socket) {

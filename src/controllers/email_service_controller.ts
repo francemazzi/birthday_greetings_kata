@@ -19,11 +19,20 @@ export class EmailController {
         });
       }
 
+      console.log("Verifico connessione SMTP con:", {
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+      });
+
       const isConnected = await this.emailService.verifyConnection();
       if (!isConnected) {
         return res.status(500).json({
           success: false,
           message: "Impossibile connettersi al server SMTP",
+          details: {
+            host: process.env.SMTP_HOST,
+            port: process.env.SMTP_PORT,
+          },
         });
       }
 

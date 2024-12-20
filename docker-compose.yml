@@ -9,6 +9,10 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydb?schema=public
       - NODE_ENV=development
       - PORT=8000
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - SMTP_USER=test@example.com
+      - SMTP_PASSWORD=test
     depends_on:
       - db
     volumes:
@@ -26,6 +30,13 @@ services:
       - POSTGRES_DB=mydb
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  mailhog:
+    platform: linux/amd64
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 volumes:
   postgres_data:
