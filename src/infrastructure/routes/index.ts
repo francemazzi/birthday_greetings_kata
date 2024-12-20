@@ -1,6 +1,7 @@
 import express from "express";
 import userRouter from "./user";
 import emailRouter from "./email";
+import fileRouter from "./file";
 const router = express.Router();
 
 router.get("/", (_, res) => {
@@ -8,5 +9,6 @@ router.get("/", (_, res) => {
 });
 router.use("/user", userRouter);
 router.use("/email", emailRouter);
+router.use("/file", fileRouter);
 
 export default router;

@@ -1,5 +1,5 @@
+import { EmailService } from "../../application/services/email_service_model";
 import { Request, Response } from "express";
-import { EmailService } from "../models/email_service_model";
 
 export class EmailController {
   private emailService: EmailService;
