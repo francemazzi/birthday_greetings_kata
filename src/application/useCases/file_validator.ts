@@ -8,15 +8,20 @@ export async function validateCSVData(
 
   if (!Array.isArray(data) || data.length === 0) {
     errors.push("Il file CSV non contiene dati validi");
+    return { success: false, errors };
   }
 
-  const firstRowKeys = Object.keys(data[0] || {});
-  const hasInvalidRows = data.some(
-    (row) => !Object.keys(row).every((key) => firstRowKeys.includes(key))
-  );
+  const requiredFields = ["last_name", "first_name", "date_of_birth", "email"];
 
-  if (hasInvalidRows) {
-    errors.push("Alcune righe hanno una struttura non valida");
+  for (const row of data) {
+    const missingFields = requiredFields.filter((field) => !(field in row));
+    if (missingFields.length > 0) {
+      errors.push(
+        `Riga invalida: mancano i campi ${missingFields.join(
+          ", "
+        )} - ${JSON.stringify(row)}`
+      );
+    }
   }
 
   return {

@@ -1,23 +1,13 @@
 import { Readable } from "stream";
 import * as csv from "csv-parse";
-import { CSVRecord } from "./file_reader";
+import { CSVRecord, UserCSVRecord } from "./file_reader";
 import { UserFactory } from "../../domain/repositories/user_factory";
 import { Prisma } from "@prisma/client";
-
-export interface UserCSVRecord extends CSVRecord {
-  email: string;
-  name: string;
-  surname: string;
-  birthday: string;
-}
 
 export class CSVFileReader<T extends CSVRecord> {
   private data: T[] = [];
 
-  constructor(
-    private file: Express.Multer.File,
-    private transformer?: (row: CSVRecord) => T
-  ) {}
+  constructor(private file: Express.Multer.File) {}
 
   async readFile(): Promise<T[]> {
     return new Promise((resolve, reject) => {
@@ -31,14 +21,11 @@ export class CSVFileReader<T extends CSVRecord> {
             columns: true,
             trim: true,
             cast: true,
+            delimiter: ";",
           })
         )
         .on("data", (row: CSVRecord) => {
-          const transformedRow = this.transformer
-            ? this.transformer(row)
-            : (row as T);
-
-          results.push(transformedRow);
+          results.push(row as T);
         })
         .on("end", () => {
           this.data = results;
@@ -65,9 +52,9 @@ export class CSVFileReader<T extends CSVRecord> {
     const isValidUserData = (row: any): row is UserCSVRecord => {
       return (
         typeof row.email === "string" &&
-        typeof row.name === "string" &&
-        typeof row.surname === "string" &&
-        typeof row.birthday === "string"
+        typeof row.first_name === "string" &&
+        typeof row.last_name === "string" &&
+        typeof row.date_of_birth === "string"
       );
     };
 
@@ -85,7 +72,7 @@ export class CSVFileReader<T extends CSVRecord> {
           continue;
         }
 
-        const birthdayDate = new Date(row.birthday);
+        const birthdayDate = new Date(row.date_of_birth);
         if (isNaN(birthdayDate.getTime())) {
           errors.push(`Data di nascita non valida per: ${row.email}`);
           continue;
@@ -93,8 +80,8 @@ export class CSVFileReader<T extends CSVRecord> {
 
         const userData: Prisma.UserCreateInput = {
           email: row.email.toLowerCase(),
-          name: row.name,
-          surname: row.surname,
+          name: row.first_name,
+          surname: row.last_name,
           birthday: birthdayDate,
         };
 

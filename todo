@@ -1,4 +1,2 @@
 - logica user -> registrati (check se email esiste già basta che prendi password), login, salva utente senza password
-- caricare file csv con email e compleanni in formato -> salvarli in db
-- inviare gli auguri a quelli che compiono gli anni quando digiti invio
 - automatizzare l'invio degli auguri

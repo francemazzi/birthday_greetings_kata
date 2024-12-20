@@ -6,7 +6,8 @@ import { Request, Response } from "express";
 
 export class CSVController {
   constructor(private userFactory: UserFactory) {}
-  async uploadCSV(req: Request, res: Response) {
+
+  uploadCSV = async (req: Request, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({
@@ -42,5 +43,5 @@ export class CSVController {
         message: "Errore durante l'elaborazione del file",
       });
     }
-  }
+  };
 }

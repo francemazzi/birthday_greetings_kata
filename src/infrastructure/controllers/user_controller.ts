@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 import { UserFactory } from "../../domain/repositories/user_factory";
 
 class UserController {
-  private userFactory = new UserFactory();
+  private userFactory: UserFactory;
+
+  constructor() {
+    this.userFactory = new UserFactory();
+  }
+
   async createUserHandler(req: Request, res: Response) {
     try {
       const user = await this.userFactory.createUser(req.body);
@@ -77,6 +82,19 @@ class UserController {
       return;
     }
   }
+
+  getBirthdayUsersHandler = async (_req: Request, res: Response) => {
+    try {
+      const result = await this.userFactory.sendBirthdayWishes();
+      res.json(result);
+    } catch (error) {
+      console.error("Errore nell'invio degli auguri di compleanno:", error);
+      res.status(500).json({
+        success: false,
+        message: "Errore nell'invio degli auguri di compleanno",
+      });
+    }
+  };
 }
 
 export default new UserController();

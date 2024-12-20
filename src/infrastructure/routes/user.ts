@@ -9,5 +9,6 @@ router.post("/register", UserController.registerUserHandler);
 router.post("/login", UserController.loginUserHandler);
 router.delete("/delete", UserController.deleteUserHandler);
 router.get("/:id", UserController.getUserByIdHandler);
+router.post("/send-birthday-email", UserController.getBirthdayUsersHandler);
 
 export default router;

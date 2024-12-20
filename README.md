@@ -39,6 +39,20 @@ The goal of this exercise is to come up with a solution that is
 - Flexible: we anticipate that the data source in the future could change from a flat file to a relational database, or perhaps a web service. We also anticipate that the email service could soon be replaced with a service that sends greetings through Facebook or some other social network.
 - Well-designed: separate clearly the business logic from the infrastructure.
 
+## TEST
+
+1. Effettua una chiamata POST a /file/upload con un file CSV valido; in questo modo è possibile aggiornare il database con i dati del file csv.
+
+   ```
+   {
+     "file":  <File>
+   }
+   ```
+
+2. Effettua una chiamata POST a /user/send-birthday-email per controllare chi compie gli anni e inviare in automatico gli auguri.
+
+3. Controlla il server mailhog per vedere se gli auguri sono stati inviati all'url http://localhost:8025
+
 ## 🚀 Avvio Rapido
 
 ### Prerequisiti
