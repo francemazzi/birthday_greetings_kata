@@ -1,0 +1,4 @@
+- trestare che invii email
+- caricare file csv con email e compleanni in formato -> salvarli in db
+- inviare gli auguri a quelli che compiono gli anni quando digiti invio
+- automatizzare l'invio degli auguri
