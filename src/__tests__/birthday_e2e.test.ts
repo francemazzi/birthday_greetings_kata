@@ -1,7 +1,6 @@
-import { UserFactory } from "../user_factory";
-import { BirthdayService } from "../birthday_service";
-import { EmailService } from "../../../application/services/email_service_model";
-import prisma from "../../../infrastructure/utils/prisma_client";
+import { UserFactory } from "../domain/repositories/user_factory";
+import { BirthdayService } from "../domain/repositories/birthday_service";
+import { EmailService } from "../application/services/email_service_model";
 
 describe("Birthday E2E Test", () => {
   const userFactory = new UserFactory();

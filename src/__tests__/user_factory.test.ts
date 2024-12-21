@@ -1,5 +1,5 @@
-import { UserFactory } from "../user_factory";
-import prisma from "../../../infrastructure/utils/prisma_client";
+import { UserFactory } from "../domain/repositories/user_factory";
+import prisma from "../infrastructure/utils/prisma_client";
 
 describe("UserFactory - Birthday Tests", () => {
   const userFactory = new UserFactory();

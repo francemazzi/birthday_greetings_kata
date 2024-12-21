@@ -1,9 +1,9 @@
-import { BirthdayService } from "../birthday_service";
-import { EmailService } from "../../../application/services/email_service_model";
-import { UserFactory } from "../user_factory";
+import { BirthdayService } from "../domain/repositories/birthday_service";
+import { EmailService } from "../application/services/email_service_model";
+import { UserFactory } from "../domain/repositories/user_factory";
 
-jest.mock("../../../application/services/email_service_model");
-jest.mock("../user_factory");
+jest.mock("../application/services/email_service_model");
+jest.mock("../domain/repositories/user_factory");
 
 describe("BirthdayService", () => {
   let birthdayService: BirthdayService;
