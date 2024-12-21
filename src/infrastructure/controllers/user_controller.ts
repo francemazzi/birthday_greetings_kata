@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { UserFactory } from "../../domain/repositories/user_factory";
+import { BirthdayService } from "../../domain/repositories/birthday_service";
 
 /**
  * @swagger
@@ -9,9 +10,11 @@ import { UserFactory } from "../../domain/repositories/user_factory";
  */
 class UserController {
   private userFactory: UserFactory;
+  private birthdayService: BirthdayService;
 
   constructor() {
     this.userFactory = new UserFactory();
+    this.birthdayService = new BirthdayService();
   }
 
   /**
@@ -26,7 +29,7 @@ class UserController {
    */
   getBirthdayUsersHandler = async (_req: Request, res: Response) => {
     try {
-      const result = await this.userFactory.sendBirthdayWishes();
+      const result = await this.birthdayService.sendBirthdayWishes();
       res.json(result);
     } catch (error) {
       console.error("Errore nell'invio degli auguri di compleanno:", error);
