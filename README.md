@@ -1,65 +1,30 @@
-# Birthday greetings kata
+# Birthday Greetings Kata by frama
 
-Esercizio tecnico di API server basato su Express.js, TypeScript, Prisma e PostgreSQL.
-L'obiettivo è sviluppare una piccola applicazione per inviare automaticamente auguri alle persone che compiono gli anni.
+Un'applicazione server API per l'invio automatico di auguri di compleanno, sviluppata con Express.js, TypeScript, Prisma e PostgreSQL.
 
-# Problem: write a program that
+## 🎯 Obiettivo del Progetto
 
-- Loads a set of employee records from a flat file
-- Sends a greetings email to all employees whose birthday is today
-- The flat file is a sequence of records, separated by newlines; this are the first few lines:
+Sviluppare un'applicazione che:
 
-last_name, first_name, date_of_birth, email
-Doe, John, 1982/10/08, john.doe@foobar.com
-Ann, Mary, 1975/09/11, mary.ann@foobar.com
+- Carica dati dei dipendenti da un file CSV
+- Invia automaticamente email di auguri a chi compie gli anni
+- Gestisce i dati in modo flessibile e testabile
 
-The greetings email contains the following text:
+### Formato File CSV
 
-Subject: Happy birthday!
+```csv
+cognome, nome, data_di_nascita, email
+Rossi, Mario, 1982/10/08, mario.rossi@esempio.com
+Bianchi, Anna, 1975/09/11, anna.bianchi@esempio.com
+```
 
-Happy birthday, dear John!
-with the first name of the employee substituted for “John”
-
-The program should be invoked by a main program like this one:
-
-public static void main(String[] args) {
-...
-BirthdayService birthdayService = new BirthdayService(
-employeeRepository, emailService);
-birthdayService.sendGreetings(today());
-}
-
-Note that the collaborators of the birthdayService objects are injected in it. Ideally domain code should never use the new operator. The new operator is called from outside the domain code, to set up an aggregate of objects that collaborate together.
-
-# Goals
-
-The goal of this exercise is to come up with a solution that is
-
-- Testable; we should be able to test the internal application logic with no need to ever send a real email.
-- Flexible: we anticipate that the data source in the future could change from a flat file to a relational database, or perhaps a web service. We also anticipate that the email service could soon be replaced with a service that sends greetings through Facebook or some other social network.
-- Well-designed: separate clearly the business logic from the infrastructure.
-
-## TEST
-
-1. Effettua una chiamata POST a /file/upload con un file CSV valido; in questo modo è possibile aggiornare il database con i dati del file csv.
-
-   ```
-   {
-     "file":  <File>
-   }
-   ```
-
-2. Effettua una chiamata POST a /user/send-birthday-email per controllare chi compie gli anni e inviare in automatico gli auguri.
-
-3. Controlla il server mailhog per vedere se gli auguri sono stati inviati all'url http://localhost:8025
-
-## 🚀 Avvio Rapido
+## 🚀 Guida Rapida all'Installazione
 
 ### Prerequisiti
 
-- Node.js (>= 14.0.0)
+- Node.js (≥ 14.0.0)
 - Docker e Docker Compose
-- PostgreSQL (per sviluppo locale)
+- PostgreSQL
 
 ### Installazione
 
@@ -116,26 +81,40 @@ The goal of this exercise is to come up with a solution that is
 - Introspect database and push data: npx prisma db pull
 - If you want to seed data on database you have to write: npx prisma db seed
 
-### 📚 API Documentation
+## 📡 API Disponibili
 
-L'API include i seguenti endpoint principali:
+### Test delle API
 
-- **Auth**
+Documentazione Swagger: http://localhost:8000/api-docs
 
-  - POST `/api/auth/register` - Registrazione nuovo utente
-  - POST `/api/auth/login` - Login utente
+#### Principali Endpoint:
 
-- **Users**
-  - GET `/api/users` - Lista utenti
-  - GET `/api/users/:id` - Dettagli utente
-  - DELETE `/api/users/:id` - Elimina utente
+- **POST** `/file/upload` - Caricamento CSV dipendenti
+- **POST** `/user/send-birthday-email` - Invio auguri automatici
+- **GET** `/api/users` - Lista utenti
+- **POST** `/api/auth/login` - Accesso utente
+
+### Test Invio Email
+
+Utilizzare MailHog (http://localhost:8025) per verificare l'invio delle email.
+
+Esempio di test:
+
+```bash
+curl -X POST http://localhost:8000/email/send \
+-H "Content-Type: application/json" \
+-d '{
+  "to": "test@esempio.com",
+  "subject": "Email di Test",
+  "contenuto": "Questo è un test"
+}'
+```
 
 ### 🔐 Autenticazione
 
 Il sistema utilizza JWT (JSON Web Tokens) per l'autenticazione. Include:
 
 - Token di accesso con scadenza 30 giorni
-- Middleware di autenticazione per route protette
 
 ### 🗄️ Database
 
@@ -156,25 +135,12 @@ Il sistema utilizza JWT (JSON Web Tokens) per l'autenticazione. Include:
   docker exec -i <container-name> psql -U postgres mydb < backup.sql
   ```
 
-## TEST to send email
+## 📄 Licenza
 
-We use mailhog to test the email sending. The steps are:
+Copyright (c) 2024 Francesco Saverio Mazzi
 
-1. Run the docker compose file
-2. Go to http://localhost:8025/ to see the emails sent
+È concessa gratuitamente l'autorizzazione a qualsiasi persona che ottenga una copia di questo software e dei file di documentazione associati (il "Software"), di trattare il Software senza restrizioni, inclusi, senza limitazione, i diritti di utilizzare, copiare, modificare, unire, pubblicare, distribuire, sublicenziare e/o vendere copie del Software, e di permettere alle persone a cui il Software è fornito di farlo, alle seguenti condizioni:
 
-Use this curl:
+L'avviso di copyright di cui sopra e questo avviso di autorizzazione devono essere inclusi in tutte le copie o parti sostanziali del Software.
 
-```bash
-curl -X POST http://localhost:8000/email/send \
--H "Content-Type: application/json" \
--d '{
-  "to": "test@example.com",
-  "subject": "Test Email",
-  "content": "This is a test"
-}'
-```
-
-## 📝 License
-
-MIT License - vedere il file LICENSE per i dettagli
+IL SOFTWARE VIENE FORNITO "COSÌ COM'È", SENZA GARANZIE DI ALCUN TIPO, ESPLICITE O IMPLICITE, INCLUSE MA NON LIMITATE ALLE GARANZIE DI COMMERCIABILITÀ, IDONEITÀ PER UN PARTICOLARE SCOPO E NON VIOLAZIONE. IN NESSUN CASO GLI AUTORI O I TITOLARI DEL COPYRIGHT SARANNO RESPONSABILI PER QUALSIASI RECLAMO, DANNO O ALTRA RESPONSABILITÀ, SIA IN UN'AZIONE DI CONTRATTO, TORTO O ALTRO, DERIVANTE DA, FUORI O IN CONNESSIONE CON IL SOFTWARE O L'USO O ALTRE OPERAZIONI NEL SOFTWARE.

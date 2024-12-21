@@ -4,9 +4,40 @@ import { CSVFileReader } from "../../application/services/file_reader_model";
 import { validateCSVData } from "../../application/useCases/file_validator";
 import { Request, Response } from "express";
 
+/**
+ * @swagger
+ * tags:
+ *   name: CSV
+ *   description: Operazioni relative al caricamento della lista degli utenti e dei loro compleanni
+ */
 export class CSVController {
   constructor(private userFactory: UserFactory) {}
 
+  /**
+   * @swagger
+   * /file/upload:
+   *   post:
+   *     summary: Carica un file CSV
+   *     tags: [CSV]
+   *     consumes:
+   *       - multipart/form-data
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         multipart/form-data:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               file:
+   *                 type: string
+   *                 format: binary
+   *                 description: File CSV da caricare
+   *     responses:
+   *       200:
+   *         description: File caricato con successo
+   *       400:
+   *         description: Errore nella richiesta
+   */
   uploadCSV = async (req: Request, res: Response) => {
     try {
       if (!req.file) {

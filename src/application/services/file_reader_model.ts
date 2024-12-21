@@ -78,6 +78,14 @@ export class CSVFileReader<T extends CSVRecord> {
           continue;
         }
 
+        const email = row.email.toLowerCase();
+        const existingUser = await userFactory.getUserByEmail(email);
+
+        if (existingUser) {
+          errors.push(`Utente già esistente: ${row.email}`);
+          continue;
+        }
+
         const userData: Prisma.UserCreateInput = {
           email: row.email.toLowerCase(),
           name: row.first_name,

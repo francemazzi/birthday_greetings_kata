@@ -1,2 +1,3 @@
 - logica user -> registrati (check se email esiste già basta che prendi password), login, salva utente senza password
+- creare chiamate per creare e modifcare i dati degli utenti
 - automatizzare l'invio degli auguri

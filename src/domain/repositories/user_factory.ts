@@ -139,6 +139,21 @@ export class UserFactory {
     }
   }
 
+  public async updateUser(id: string, data: Partial<Prisma.UserUpdateInput>) {
+    try {
+      const updatedUser = await prisma.user.update({
+        where: { id },
+        data,
+      });
+      return updatedUser;
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento dell'utente:", error);
+      throw error;
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
+
   public async sendBirthdayWishes(): Promise<{
     success: boolean;
     message: string;
